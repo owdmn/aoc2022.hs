@@ -1,3 +1,4 @@
+import GHC.Base
 import Data.List
 
 main :: IO ()
@@ -10,10 +11,7 @@ main = do
 
 accum :: [[Char]] -> [Int]
 accum [] = []
-accum (x:xs) = sumUp (x:xs) 0
-    where
-        sumUp :: [[Char]] -> Int -> [Int]
-        sumUp  []     n = n : []
-        sumUp ([]:ys) n = n : accum ys
-        sumUp ( y:ys) n = sumUp ys (n + (read y :: Int)) 
+accum (x:xs) | x == [] = accum xs
+             | otherwise = (sum $ read <$> takeWhile p (x:xs)) : (accum $ (dropWhile p (x:xs)))
+             where p = not . eqString ""
 
