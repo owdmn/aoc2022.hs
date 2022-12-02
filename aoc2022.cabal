@@ -10,7 +10,7 @@ extra-source-files:
     LICENSE
 
 executable 1
-  main-is: src/1/main.hs
+  main-is: src/1/Main.hs
   ghc-options: -Wall -Widentities -Wincomplete-uni-patterns -Wincomplete-record-updates -Wno-unused-top-binds -Wno-orphans
   build-depends:
     base
