@@ -1,1 +1,1 @@
-#Advent of Code 2022 - in Haskell
+# Advent of Code 2022 - in Haskell
