@@ -16,39 +16,27 @@ data RPS = R | P | S
 data Result = Lose | Tie | Win
     deriving (Eq, Enum, Show)
 
--- decide who wins, opponent goes first
 defeats :: RPS -> RPS -> Result
 defeats x y
     | csucc x == y = Win
     | cpred x == y = Lose
     | otherwise = Tie
 
-score :: (RPS, RPS) -> Int
-score x = 1 + fromEnum (snd x) + 3 * fromEnum (uncurry defeats x)
-
-p :: Char -> RPS
+p :: Char -> (RPS, RPS -> RPS)
 p c
-    | c `elem` "AX" = R
-    | c `elem` "BY" = P
-    | c `elem` "CZ" = S
+    | c `elem` "AX" = (R, cpred)
+    | c `elem` "BY" = (P, id)
+    | c `elem` "CZ" = (S, csucc)
     | otherwise = undefined
 
 parse :: String -> (RPS, RPS)
-parse x = (p (head x), p (x!!2))
+parse x = (fst $ p.head $ x, fst $ p (x!!2))
 
 parse' :: String -> (RPS, RPS)
-parse' x = (p (head x), pickMove (p (head x)) (q (x!!2)))
-    where 
-        q :: Char -> Result
-        q 'X' = Lose
-        q 'Y' = Tie
-        q 'Z' = Win
-        q  _  = undefined
+parse' x = (fst $ p.head $ x, (snd $ p (x!!2)) $ (fst $ p (head x)))
 
-pickMove :: RPS -> Result -> RPS
-pickMove x Win = csucc x
-pickMove x Lose = cpred x
-pickMove x Tie = x
+score :: (RPS, RPS) -> Int
+score x = 1 + fromEnum (snd x) + 3 * fromEnum (uncurry defeats x)
 
 main :: IO ()
 main = do
